@@ -6,4 +6,5 @@ pandas
 pypyr
 python-dotenv
 tensorflow
-unicorn
+uvicorn
+boto3
