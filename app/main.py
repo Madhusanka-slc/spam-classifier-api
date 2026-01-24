@@ -2,6 +2,7 @@ from fastapi import FastAPI
 import pathlib
 from typing import Optional
 from tensorflow.keras.models import load_model
+from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.preprocessing.text import tokenizer_from_json
 import json
 
@@ -33,11 +34,25 @@ def on_startup():
        MODEL_METADATA = json.loads(METADATA_PATH.read_text())
        labels_legend_inverted = MODEL_METADATA['labels_legend_inverted']
 
+def predict(query:str):
+   # sequences
+   # pad_sequences
+   # model.predict
+   # convert to labels
+   sequences = AI_TOKENIZER.texts_to_sequences([query])
+   maxlen = MODEL_METADATA.get('max_sequence') or 280
+   x_input = pad_sequences(sequences, maxlen=maxlen)
+   print(x_input)
+   print(x_input.shape)
+   preds_array = AI_MODEL.predict(x_input) # list of predict
+   preds = preds_array[0]
+   print('PRED: ',preds)
+   return {}
+   
+
 @app.get("/")
 def read_index(q:Optional[str]=None):
     global AI_MODEL,MODEL_METADATA,labels_legend_inverted
     query = q or "hello world"
-    # predict(query)
-    print(AI_MODEL)
-
+    predict(query)
     return {"query": query, **MODEL_METADATA, "legend-":labels_legend_inverted}
