@@ -5,6 +5,19 @@ from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.preprocessing.text import tokenizer_from_json
 import json
+import numpy as np
+
+class NumpyEncoder(json.JSONEncoder):
+    """Special JSON encoder for NumPy types"""
+
+    def default(self, obj):
+        if isinstance(obj, np.integer):
+            return int(obj)
+        if isinstance(obj, np.floating):
+            return float(obj)
+        if isinstance(obj, np.ndarray):
+            return obj.tolist()
+        return json.JSONEncoder.default(self, obj)
 
 app = FastAPI()
 BASE_DIR = pathlib.Path(__file__).resolve().parent
@@ -46,13 +59,22 @@ def predict(query:str):
    print(x_input.shape)
    preds_array = AI_MODEL.predict(x_input) # list of predict
    preds = preds_array[0]
-   print('PRED: ',preds)
-   return {}
+   top_idx_val = np.argmax(preds)
+   top_pred = {
+      "label": labels_legend_inverted[str(top_idx_val)] , 
+      "confidence": preds[top_idx_val]
+   }
+   labeled_preds = [{
+      "label": labels_legend_inverted[str(i)] , 
+      "confidence": x
+   } for i,x in enumerate(preds)]
+
+   return json.loads(json.dumps({"top":top_pred, "predictions":labeled_preds}, cls=NumpyEncoder))
    
 
 @app.get("/")
 def read_index(q:Optional[str]=None):
     global AI_MODEL,MODEL_METADATA,labels_legend_inverted
     query = q or "hello world"
-    predict(query)
-    return {"query": query, **MODEL_METADATA, "legend-":labels_legend_inverted}
+    preds_dict = predict(query)
+    return {"query": query, "results": preds_dict}
