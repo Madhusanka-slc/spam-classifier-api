@@ -9,3 +9,5 @@ tensorflow
 uvicorn
 boto3
 dataclasses
+pydantic-settings
+pydantic
