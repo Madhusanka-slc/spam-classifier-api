@@ -15,6 +15,8 @@ steps:
         import os
         import pathlib
         from dotenv import load_dotenv
+        from pypyr.context import Context
+        
         load_dotenv()
         dest_path = pathlib.Path(context['local_dest_dir']).resolve()
         dest_path.mkdir(exist_ok=True, parents=True)
