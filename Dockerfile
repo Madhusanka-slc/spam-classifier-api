@@ -1,9 +1,9 @@
 FROM codingforentrepreneurs/python:3.9-webapp-cassandra
 
-# COPY .env /app/.env
+COPY .env /app/.env
 COPY ./app /app/app
-COPY ./requirements.txt ./app/requirements.txt
-# COPY ./entrypoint.sh /app/entrypoint.sh
+COPY ./requirements.txt /app/requirements.txt
+COPY ./entrypoint.sh /app/entrypoint.sh
 # COPY ./pipelines /app/pipelines/
 
 # RUN chmod +x /app/entrypoint.sh
@@ -15,4 +15,4 @@ RUN python -m venv /opt/venv && \
 
 # RUN /opt/venv/bin/python -m pypyr /app/pipelines/ai-model-download
 
-# CMD ["entrypoint.sh"]
+CMD ["entrypoint.sh"]
