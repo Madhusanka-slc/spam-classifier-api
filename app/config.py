@@ -19,5 +19,6 @@ class Settings(BaseSettings):
         env_file = ".env"
         extra = "ignore"  # This will ignore any extra fields in .env
 
+@lru_cache
 def get_settings():
     return Settings()
