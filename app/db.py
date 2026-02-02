@@ -13,8 +13,8 @@ CLUSTER_BUNDLE = str( SOURCE_DIR / 'astradb_connect.zip')
 
 settings = config.get_settings()
 
-ASTRA_DB_CLIENT_ID = settings.db_client_id
-ASTRA_DB_CLIENT_SECRET  = settings.db_client_secret
+ASTRA_DB_CLIENT_ID = settings.astra_db_client_id
+ASTRA_DB_CLIENT_SECRET = settings.astra_db_client_secret
 
 
 def get_cluster():
